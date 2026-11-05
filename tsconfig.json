@@ -1,0 +1,9 @@
+{
+  "compilerOptions": {
+    "noEmit": true,
+    "noUncheckedIndexedAccess": true,
+    "types": ["bun"]
+  },
+  "extends": "@tsconfig/bun/tsconfig.json",
+  "include": ["src/**/*", "test/**/*"]
+}

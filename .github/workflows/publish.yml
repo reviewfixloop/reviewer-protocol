@@ -1,0 +1,26 @@
+name: Publish
+on:
+  push:
+    tags:
+      - v*.*.*
+permissions:
+  contents: read
+  # npm trusted publishing: the package's settings on npmjs.com name this repository and workflow.
+  id-token: write
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7.0.1
+      - uses: oven-sh/setup-bun@v2
+      - uses: actions/setup-node@v7.0.0
+        with:
+          node-version: 26.13.0
+          registry-url: https://registry.npmjs.org
+      - run: bun install --frozen-lockfile
+      - run: bun run typecheck
+      - run: bun test
+      - name: Publish the tagged version
+        run: |
+          npm version --no-git-tag-version "${GITHUB_REF_NAME#v}"
+          npm publish --provenance --access public
