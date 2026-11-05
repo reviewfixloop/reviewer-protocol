@@ -1,0 +1,43 @@
+{
+  "name": "reviewer-protocol",
+  "version": "1.0.0",
+  "description": "Reviewer Protocol: events, manifest format, and an ACP extension for connecting reviewer harnesses to review orchestrators",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/reviewfixloop/reviewer-protocol.git"
+  },
+  "license": "Apache-2.0",
+  "author": "WillBooster Inc.",
+  "type": "module",
+  "exports": {
+    ".": {
+      "bun": "./src/index.ts",
+      "types": "./dist/index.d.ts",
+      "default": "./dist/index.js"
+    }
+  },
+  "files": [
+    "dist",
+    "src"
+  ],
+  "scripts": {
+    "build": "tsc -p tsconfig.build.json",
+    "prepublishOnly": "bun run build",
+    "test": "bun test",
+    "typecheck": "tsc --noEmit"
+  },
+  "dependencies": {
+    "jsonc-parser": "3.3.1",
+    "re2js": "2.8.7",
+    "zod": "4.6.7"
+  },
+  "devDependencies": {
+    "@tsconfig/bun": "1.0.11",
+    "@types/bun": "1.4.4",
+    "typescript": "7.0.2"
+  },
+  "publishConfig": {
+    "access": "public",
+    "registry": "https://registry.npmjs.org/"
+  }
+}
