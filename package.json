@@ -1,6 +1,6 @@
 {
   "name": "reviewer-protocol",
-  "version": "1.0.0-beta.0",
+  "version": "1.0.0-beta.1",
   "description": "Reviewer Protocol: events, manifest format, and an ACP extension for connecting reviewer harnesses to review orchestrators",
   "repository": {
     "type": "git",
