@@ -15,12 +15,20 @@ jobs:
       - uses: oven-sh/setup-bun@v2
       - uses: actions/setup-node@v7.0.0
         with:
-          node-version: 26.13.0
+          node-version: 26.13.1
           registry-url: https://registry.npmjs.org
       - run: bun install --frozen-lockfile
       - run: bun run typecheck
       - run: bun test
       - name: Publish the tagged version
         run: |
-          npm version --no-git-tag-version "${GITHUB_REF_NAME#v}"
-          npm publish --provenance --access public
+          version="${GITHUB_REF_NAME#v}"
+          npm version --no-git-tag-version --allow-same-version "$version"
+          # A prerelease goes under its identifier's dist-tag (1.0.0-beta.0 under beta), so latest keeps the last release.
+          if [[ "$version" == *-* ]]; then
+            tag="${version#*-}"
+            tag="${tag%%.*}"
+          else
+            tag=latest
+          fi
+          npm publish --provenance --access public --tag "$tag"
