@@ -124,7 +124,7 @@ return { stopReason: 'end_turn', _meta: acpMeta({ usage: { input: 1200, output: 
 
 ## Versions and compatibility
 
-The protocol is not released yet: the `reviewer-protocol` package on npm is a placeholder. Until the first official release, the protocol and the manifest schema change incompatibly without raising their versions. The rules below apply from that release on.
+The protocol is in beta: the `reviewer-protocol` package on npm has prereleases (`1.0.0-beta.<n>`) under the `beta` dist-tag, and a placeholder under `latest`. Until the first official release, the protocol and the manifest schema change incompatibly without raising their versions. The rules below apply from that release on.
 
 - The protocol and the manifest schema each carry an integer major version (`REVIEWER_PROTOCOL_VERSION`, `MANIFEST_SCHEMA_VERSION`).
 - Adding an optional field or a `failure.kind` to the protocol does not raise its major: a host ignores unknown fields and reads an unknown kind as `unknown`.
