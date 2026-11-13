@@ -12,8 +12,10 @@ A harness connects in one of two ways:
 This package holds the protocol's schemas ([zod](https://zod.dev)) and the functions a host and a manifest author share: manifest parsing and hashing, template rendering, and the output mapping.
 
 ```sh
-npm install reviewer-protocol
+npm install reviewer-protocol@beta
 ```
+
+Until the first official release, the package is published under the `beta` dist-tag (see [Versions and compatibility](#versions-and-compatibility)).
 
 ## Boundary
 
