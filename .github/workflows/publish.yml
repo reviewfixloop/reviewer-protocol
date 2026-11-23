@@ -1,34 +1,33 @@
 name: Publish
 on:
   push:
-    tags:
-      - v*.*.*
+    branches:
+      - main
+  # Recovers a failed publish at the tip of main; a rerun keeps its old commit, which semantic-release skips once main has moved.
+  workflow_dispatch:
 permissions:
-  contents: read
-  # npm trusted publishing: the package's settings on npmjs.com name this repository and workflow.
+  # semantic-release pushes the release tag and creates the GitHub release.
+  contents: write
+  # npm trusted publishing: the package's settings on npmjs.com name this repository and this workflow file.
   id-token: write
+concurrency:
+  group: ${{ github.workflow }}
+  cancel-in-progress: false
 jobs:
   publish:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v7.0.1
+        with:
+          # semantic-release reads every commit since the last release tag.
+          fetch-depth: 0
       - uses: oven-sh/setup-bun@v2
       - uses: actions/setup-node@v7.0.0
         with:
           node-version: 26.13.1
-          registry-url: https://registry.npmjs.org
       - run: bun install --frozen-lockfile
       - run: bun run typecheck
       - run: bun test
-      - name: Publish the tagged version
-        run: |
-          version="${GITHUB_REF_NAME#v}"
-          npm version --no-git-tag-version --allow-same-version "$version"
-          # A prerelease goes under its identifier's dist-tag (1.0.0-beta.0 under beta), so latest keeps the last release.
-          if [[ "$version" == *-* ]]; then
-            tag="${version#*-}"
-            tag="${tag%%.*}"
-          else
-            tag=latest
-          fi
-          npm publish --provenance --access public --tag "$tag"
+      - run: npx semantic-release
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

@@ -1,0 +1,15 @@
+{
+  "branches": ["main"],
+  "plugins": [
+    ["@semantic-release/commit-analyzer", { "preset": "conventionalcommits" }],
+    [
+      "@semantic-release/release-notes-generator",
+      { "parserOpts": { "headerPattern": "^(\\w*)(?:\\((.*)\\))?!?: (.*)$" } }
+    ],
+    "@semantic-release/npm",
+    [
+      "@semantic-release/github",
+      { "labels": false, "releasedLabels": false, "successCommentCondition": false, "failCommentCondition": false }
+    ]
+  ]
+}

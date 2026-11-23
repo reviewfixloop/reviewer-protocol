@@ -6,7 +6,7 @@
  */
 export function canonicalJson(value: unknown): string {
   if (value === null || typeof value !== 'object') {
-    if (typeof value === 'number' && !Number.isFinite(value)) throw new Error('JSON has no non-finite numbers');
+    if (typeof value === 'number' && !Number.isFinite(value)) throw new TypeError('JSON has no non-finite numbers');
     const text = JSON.stringify(value);
     if (text === undefined) throw new Error(`not a JSON value: ${typeof value}`);
     return text;

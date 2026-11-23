@@ -1,6 +1,6 @@
 {
   "name": "reviewer-protocol",
-  "version": "1.0.0-beta.1",
+  "version": "0.0.0-semantically-released",
   "description": "Reviewer Protocol: events, manifest format, and an ACP extension for connecting reviewer harnesses to review orchestrators",
   "repository": {
     "type": "git",
@@ -34,7 +34,9 @@
   "devDependencies": {
     "@tsconfig/bun": "1.0.11",
     "@types/bun": "1.4.4",
-    "typescript": "7.0.2"
+    "typescript": "7.0.2",
+    "semantic-release": "25.0.9",
+    "conventional-changelog-conventionalcommits": "10.4.0"
   },
   "publishConfig": {
     "access": "public",
