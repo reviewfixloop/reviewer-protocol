@@ -96,7 +96,7 @@ export function renderArgs(templates: readonly ArgTemplate[], values: TemplateVa
     }
     const list = values[template.each];
     if (list === undefined) return [];
-    if (!Array.isArray(list)) throw new Error(`"each" needs a list, and "${template.each}" is not one`);
+    if (!Array.isArray(list)) throw new TypeError(`"each" needs a list, and "${template.each}" is not one`);
     return (list as readonly string[]).flatMap((element) => renderArgs(template.args, values, element));
   });
 }
@@ -108,7 +108,7 @@ function hasValue(value: unknown): boolean {
 function applyFilter(value: unknown, filter: Filter | undefined): string {
   if (filter === 'json') return JSON.stringify(value);
   if (filter === 'toml') return tomlValue(value);
-  if (Array.isArray(value)) throw new Error('a list is rendered through "each" or a filter');
+  if (Array.isArray(value)) throw new TypeError('a list is rendered through "each" or a filter');
   return String(value);
 }
 

@@ -12,10 +12,8 @@ A harness connects in one of two ways:
 This package holds the protocol's schemas ([zod](https://zod.dev)) and the functions a host and a manifest author share: manifest parsing and hashing, template rendering, and the output mapping.
 
 ```sh
-npm install reviewer-protocol@beta
+npm install reviewer-protocol
 ```
-
-Until the first official release, the package is published under the `beta` dist-tag (see [Versions and compatibility](#versions-and-compatibility)).
 
 ## Boundary
 
@@ -126,12 +124,12 @@ return { stopReason: 'end_turn', _meta: acpMeta({ usage: { input: 1200, output: 
 
 ## Versions and compatibility
 
-The protocol is in beta: the `reviewer-protocol` package on npm has prereleases (`1.0.0-beta.<n>`) under the `beta` dist-tag, and a placeholder under `latest`. Until the first official release, the protocol and the manifest schema change incompatibly without raising their versions. The rules below apply from that release on.
+The package follows [semantic versioning](https://semver.org): a release that breaks its exports or the protocol raises the package's major version. No compatibility across majors is promised, and a new major may be released at any time.
 
 - The protocol and the manifest schema each carry an integer major version (`REVIEWER_PROTOCOL_VERSION`, `MANIFEST_SCHEMA_VERSION`).
 - Adding an optional field or a `failure.kind` to the protocol does not raise its major: a host ignores unknown fields and reads an unknown kind as `unknown`.
 - The manifest schema rejects unknown keys, so adding a key raises its version. A host refuses a manifest newer than itself and asks to be updated.
-- After a new major is released, the previous one stays supported for at least six months.
+- A host may stop accepting a previous major as soon as it supports a new one.
 
 ## License
 
