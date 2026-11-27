@@ -2,12 +2,16 @@
   "name": "reviewer-protocol",
   "version": "0.0.0-semantically-released",
   "description": "Reviewer Protocol: events, manifest format, and an ACP extension for connecting reviewer harnesses to review orchestrators",
+  "license": "Apache-2.0",
+  "author": "WillBooster Inc.",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/reviewfixloop/reviewer-protocol.git"
   },
-  "license": "Apache-2.0",
-  "author": "WillBooster Inc.",
+  "files": [
+    "dist",
+    "src"
+  ],
   "type": "module",
   "exports": {
     ".": {
@@ -16,12 +20,14 @@
       "default": "./dist/index.js"
     }
   },
-  "files": [
-    "dist",
-    "src"
-  ],
+  "publishConfig": {
+    "access": "public",
+    "registry": "https://registry.npmjs.org/"
+  },
   "scripts": {
     "build": "tsc -p tsconfig.build.json",
+    "format": "oxfmt",
+    "lint": "oxlint --type-aware && oxfmt --check",
     "prepublishOnly": "bun run build",
     "test": "bun test",
     "typecheck": "tsc --noEmit"
@@ -34,12 +40,12 @@
   "devDependencies": {
     "@tsconfig/bun": "1.0.11",
     "@types/bun": "1.4.4",
-    "typescript": "7.0.2",
+    "@willbooster/oxlint-config": "1.4.9",
+    "conventional-changelog-conventionalcommits": "10.4.0",
+    "oxfmt": "0.79.0",
+    "oxlint": "1.94.0",
+    "oxlint-tsgolint": "7.0.2007",
     "semantic-release": "25.0.9",
-    "conventional-changelog-conventionalcommits": "10.4.0"
-  },
-  "publishConfig": {
-    "access": "public",
-    "registry": "https://registry.npmjs.org/"
+    "typescript": "7.0.2"
   }
 }
