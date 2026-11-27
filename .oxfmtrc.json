@@ -1,0 +1,16 @@
+{
+  "ignorePatterns": ["dist/**", "node_modules/**"],
+  "overrides": [
+    {
+      "files": ["oxlint.config.ts"],
+      "options": {
+        "sortImports": false
+      }
+    }
+  ],
+  "printWidth": 120,
+  "singleQuote": true,
+  "sortImports": true,
+  "sortPackageJson": true,
+  "trailingComma": "es5"
+}

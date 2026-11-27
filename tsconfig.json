@@ -5,5 +5,5 @@
     "types": ["bun"]
   },
   "extends": "@tsconfig/bun/tsconfig.json",
-  "include": ["src/**/*", "test/**/*"]
+  "include": ["*.config.ts", "src/**/*", "test/**/*"]
 }

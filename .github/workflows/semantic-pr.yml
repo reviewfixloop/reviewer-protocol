@@ -1,0 +1,82 @@
+name: Semantic PR
+on:
+  pull_request:
+    types:
+      - opened
+      - edited
+      - synchronize
+      - reopened
+permissions:
+  pull-requests: read
+jobs:
+  semantic-pr:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Validate PR title
+        shell: node {0}
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          const CONVENTIONAL_COMMIT_RE =
+            /^(?:feat|fix|docs|style|refactor|perf|test|build|ci|chore|revert)(?:\([^()\r\n]+\))?!?: \S[^\r\n]*$/;
+          const NON_ENGLISH_RE =
+            /[\p{Script_Extensions=Han}\p{Script_Extensions=Hiragana}\p{Script_Extensions=Katakana}\p{Script_Extensions=Hangul}\p{Script_Extensions=Bopomofo}\u3000-\u303F\uFF00-\uFFEF]|[^\p{Script=Latin}\P{Letter}]/u;
+
+          import('node:fs/promises')
+            .then(async ({ readFile }) => {
+              const eventPath = process.env.GITHUB_EVENT_PATH;
+              if (!eventPath) {
+                throw new Error('GITHUB_EVENT_PATH is not set.');
+              }
+              const event = JSON.parse(await readFile(eventPath, 'utf8'));
+              const prNumber = event.pull_request?.number;
+              const repo = process.env.GITHUB_REPOSITORY;
+              const token = process.env.GITHUB_TOKEN;
+
+              let title = event.pull_request?.title;
+              if (token && repo && Number.isInteger(prNumber)) {
+                const [owner, repoName, ...extra] = repo.split('/');
+                if (!owner || !repoName || extra.length > 0) {
+                  throw new Error(`Invalid GITHUB_REPOSITORY: "${repo}"`);
+                }
+                const apiUrl = (process.env.GITHUB_API_URL || 'https://api.github.com').replace(/\/+$/, '');
+                const url = `${apiUrl}/repos/${encodeURIComponent(owner)}/${encodeURIComponent(repoName)}/pulls/${prNumber}`;
+                const response = await fetch(url, {
+                  headers: {
+                    Accept: 'application/vnd.github+json',
+                    Authorization: `Bearer ${token}`,
+                    'User-Agent': 'semantic-pr-check',
+                    'X-GitHub-Api-Version': '2022-11-28',
+                  },
+                });
+                if (!response.ok) {
+                  throw new Error(`Failed to fetch PR #${prNumber}: ${response.status} ${await response.text()}`);
+                }
+                const pr = await response.json();
+                title = pr.title;
+              }
+
+              if (typeof title !== 'string' || title.length === 0) {
+                throw new Error('Could not determine pull request title.');
+              }
+
+              if (!CONVENTIONAL_COMMIT_RE.test(title)) {
+                console.error(
+                  `Invalid PR title: "${title}"\nExpected Conventional Commits format: <type>[optional (scope)][!]: <description>\nAllowed types: feat, fix, docs, style, refactor, perf, test, build, ci, chore, revert`
+                );
+                process.exit(1);
+              }
+
+              if (NON_ENGLISH_RE.test(title)) {
+                console.error(
+                  `Invalid PR title: "${title}"\nPR title must be written in English and must not contain CJK or non-Latin characters.`
+                );
+                process.exit(1);
+              }
+
+              console.log(`Valid PR title: ${title}`);
+            })
+            .catch((error) => {
+              console.error(error);
+              process.exit(1);
+            });

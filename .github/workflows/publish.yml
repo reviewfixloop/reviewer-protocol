@@ -26,6 +26,7 @@ jobs:
         with:
           node-version: 26.13.1
       - run: bun install --frozen-lockfile
+      - run: bun run lint
       - run: bun run typecheck
       - run: bun test
       - run: npx semantic-release
